@@ -11,12 +11,12 @@ class Table extends React.Component {
             result: []
         }
     }
-    renderTableData=  () => {
+    renderTableData=  () => { //render values from result
         return this.state.result.map(value=> {
             return (
                 <tr>
                     <td>{value.step}</td>
-                    <td>{value.roombaLocation}</td>
+                    <td>{value.roombaLocation[0]} , {value.roombaLocation[1]}</td>
                     <td>{value.action}</td>
                     <td>{value.ttlDirtCollected}</td>
                     <td>{value.ttlWallHits}</td>
@@ -25,7 +25,7 @@ class Table extends React.Component {
                 )
         })
     }
-    render() {
+    render() { //process steps and save results to Instructions
         //console.log(this.state.Instructions);
         var roomDimensions= this.state.Instructions.roomDimensions;
         var initialRoombaLocation= this.state.Instructions.initialRoombaLocation;
@@ -55,7 +55,7 @@ class Table extends React.Component {
         
         for(let i = 0; i<drivingInstructions.length; i++){
             
-            var currentInstruction = drivingInstructions[i].toUpperCase();
+            var currentInstruction = drivingInstructions[i].toUpperCase(); //standardize for minor typos
             var previous = [currRoombaLocation[0],currRoombaLocation[1]];
             //console.log(currRoombaLocation);
             switch(currentInstruction) {
@@ -75,19 +75,19 @@ class Table extends React.Component {
                     console.log("Invalid Direction");
             }
             
-            if(currRoombaLocation[0]<0 || currRoombaLocation[0] >= eastWall || currRoombaLocation[1]<0 || currRoombaLocation[1] >= southWall){
+            if(currRoombaLocation[0]<0 || currRoombaLocation[0] >= eastWall || currRoombaLocation[1]<0 || currRoombaLocation[1] >= southWall){ //check if hit wall
                 currRoombaLocation = previous;
                 wallHits ++;
             }
             else{
                 distanceTraveled++;
             }
-            var indexOfDirt = getIndex(currRoombaLocation);
+            var indexOfDirt = getIndex(currRoombaLocation); //check if moved to dirt
             if(indexOfDirt !== -1){
                 dirtCollected++;
                 dirtLocations.splice(indexOfDirt,1);
             }
-            this.state.result.push({step: i+2, roombaLocation: [currRoombaLocation[0], currRoombaLocation[1]], action: currentInstruction, ttlDirtCollected: dirtCollected, ttlWallHits: wallHits, ttlDistanceTraveled: distanceTraveled});
+            this.state.result.push({step: i+2, roombaLocation: [currRoombaLocation[0], currRoombaLocation[1]], action: currentInstruction, ttlDirtCollected: dirtCollected, ttlWallHits: wallHits, ttlDistanceTraveled: distanceTraveled}); //save iteration
             //console.log(result);
         }
         console.log(this.state.result);
@@ -130,10 +130,7 @@ class JSONButton extends React.Component {
       });
     };
   }
-
-    /*handleInput() {
-        this.setState({fileSent: true})
-    }*/
+    
   renderTable() {
       return <Table value={this.state.jsonFile} />;
   }
