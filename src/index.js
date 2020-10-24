@@ -25,20 +25,26 @@ class Table extends React.Component {
                 )
         })
     }
+    renderError() {
+        return <p>Roomba location invalid</p>
+    }
     render() { //process steps and save results to Instructions
         //console.log(this.state.Instructions);
         var roomDimensions= this.state.Instructions.roomDimensions;
-        var initialRoombaLocation= this.state.Instructions.initialRoombaLocation;
+        var currRoombaLocation= this.state.Instructions.initialRoombaLocation;
         var dirtLocations= this.state.Instructions.dirtLocations;
         var drivingInstructions = this.state.Instructions.drivingInstructions;
         //var result = [];
             
         const eastWall = roomDimensions[0];
         const southWall = roomDimensions[1];
-        var currRoombaLocation = initialRoombaLocation;
         var wallHits = 0;
         var dirtCollected = 0;
         var distanceTraveled =0;
+        
+        if(currRoombaLocation[0]<0 || currRoombaLocation[0] >= eastWall || currRoombaLocation[1]<0 || currRoombaLocation[1] >= southWall){
+            return this.renderError();
+        }
         
         function getIndex(loc){
             return dirtLocations.findIndex(obj => obj[0] === loc[0] && obj[1] === loc[1])
